@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const User = require('../db');
+const  User  = require('../db');
+const UserZodSchema = require('../zod');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const JWT_SECRET = require("../config");
@@ -20,17 +21,21 @@ router.post('/', async (req, res) => {
                 return res.status(400).json({ "message": "Email already exists" });
             }
         }
-        const hashedPassword = await bcrypt.hash(password, 10);
         const newUser = new User({
             username,
-            password: hashedPassword,
+            password,
             email,
             firstName,
             lastName,
         });
+        const validate = UserZodSchema.safeParse(newUser);
+        if (validate.error) {
+            res.status(400).json({ error: validate.error });
+        }
+        newUser.password = await bcrypt.hash(newUser.password, 10);
         await newUser.save();
         const token = jwt.sign({ username }, JWT_SECRET);
-        res.json({ "message": "User created successfully", "token": `Bearer ${token}` });
+        return res.json({ "message": "User created successfully", "token": `Bearer ${token}` });
     } catch (error) {
         console.error("Error creating user:", error);
         res.status(500).json({ "error": "Internal server error" });
