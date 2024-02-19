@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const  User  = require('../db');
+const  {User , Account}  = require('../db');
 const UserZodSchema = require('../zod');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
@@ -34,6 +34,13 @@ router.post('/', async (req, res) => {
         }
         newUser.password = await bcrypt.hash(newUser.password, 10);
         await newUser.save();
+
+        const accountInfo= new Account({
+            username:username,
+            balance : 1 + Math.random()*10000
+        });
+        await accountInfo.save();
+        
         const token = jwt.sign({ username }, JWT_SECRET);
         return res.json({ "message": "User created successfully", "token": `Bearer ${token}` });
     } catch (error) {

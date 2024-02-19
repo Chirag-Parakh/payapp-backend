@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const UserZodSchema = require('../zod');
-const User = require('../db');
+const {User} = require('../db');
 const bcrypt = require('bcrypt');
 router.get('/', (req, res) => {
     res.json({ message: "update page is up" });
