@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const { number } = require("zod");
 
 mongoose.connect('mongodb+srv://cparakh53:VsR0suwDAa7XjbEs@chiraglearn.7ynaqrk.mongodb.net/payapp')
     .then(() => console.log("Connected to MongoDB"))
