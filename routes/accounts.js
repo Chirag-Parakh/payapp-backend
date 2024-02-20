@@ -8,7 +8,7 @@ router.get('/', (req, res) => {
     res.json({ message: "get some balance here" });
 })
 
-router.post('/transfer', async (req, res) => {
+router.post('/transfer',   async (req, res) => {
     try {
         const session = await mongoose.startSession()
         session.startTransaction();
@@ -42,7 +42,7 @@ router.post('/transfer', async (req, res) => {
 })
 
 
-router.get('/getbalance', async (req, res) => {
+router.get('/getbalance',  async (req, res) => {
     const authtoken = req.headers.authorization;
     const token = authtoken.split(' ')[1]
     const jwtVerification = jwt.verify(token, JWT_SECRET)
