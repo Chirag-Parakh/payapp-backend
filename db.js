@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { date } = require("zod");
 
 mongoose.connect('mongodb+srv://cparakh53:VsR0suwDAa7XjbEs@chiraglearn.7ynaqrk.mongodb.net/payapp')
     .then(() => console.log("Connected to MongoDB"))
@@ -39,6 +40,26 @@ const accountSchema = new mongoose.Schema({
         required: true
     }
 })
+
+const transactionSchema = new mongoose.Schema({
+    tousername : {
+        type : String,
+        required: true
+    },
+    fromusername : {
+        type : String,
+        required: true
+    },
+    amount : {
+        type : Number,
+        required: true
+    },
+    date : {
+        type : Date,
+        default : Date.now,
+    }
+})
+const Transaction = mongoose.model('Transaction' , transactionSchema);
 const User = mongoose.model('User', UserSchema);
 const Account = mongoose.model('Accounts' ,accountSchema )
-module.exports =  {User , Account };
+module.exports =  {User , Account , Transaction };
