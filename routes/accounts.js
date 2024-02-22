@@ -10,8 +10,8 @@ router.get('/', (req, res) => {
 
 router.post('/transfer', async (req, res) => {
     try {
-        const session = await mongoose.startSession();
-        session.startTransaction();
+        // const session = await mongoose.startSession();
+        // session.startTransaction();
         const authtoken = req.headers.authorization;
         const token = authtoken.split(' ')[1];
         const jwtVerification = jwt.verify(token, JWT_SECRET);
@@ -36,8 +36,8 @@ router.post('/transfer', async (req, res) => {
             date: new Date() // Assuming you have a date field in your Transaction schema
         });
         await newTransition.save();
-        await session.commitTransaction();
-        session.endSession(); // End the session
+        // await session.commitTransaction();
+        // session.endSession(); // End the session
         return res.json({ message: "Transaction successful" });
     } catch (error) {
         return res.status(500).json({ message: "Invalid user", error: error.message });
