@@ -3,7 +3,6 @@ const router = express.Router();
 const jwt = require('jsonwebtoken');
 const JWT_SECRET = require("../config");
 const { Account, Transaction } = require('../db');
-const { default: mongoose } = require('mongoose');
 router.get('/', (req, res) => {
     res.json({ message: "get some balance here" });
 })
