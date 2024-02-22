@@ -10,42 +10,41 @@ router.get('/', (req, res) => {
 
 router.post('/transfer', async (req, res) => {
     try {
-        const session = await mongoose.startSession()
+        const session = await mongoose.startSession();
         session.startTransaction();
         const authtoken = req.headers.authorization;
-        const token = authtoken.split(' ')[1]
-        const jwtVerification = jwt.verify(token, JWT_SECRET)
-        console.log(jwtVerification)
+        const token = authtoken.split(' ')[1];
+        const jwtVerification = jwt.verify(token, JWT_SECRET);
         const fromUsername = jwtVerification.username;
         const { toUsername, amount } = req.body;
-        const fromUser = await Account.findOne({ username: fromUsername }).session(session);
+        const fromUser = await Account.findOne({ username: fromUsername });
         if (!fromUser || fromUser.balance < amount) {
             await session.abortTransaction();
-            return res.json({ message: "Insufficient balance" })
+            return res.json({ message: "Insufficient balance" });
         }
-        const toAccount = await Account.findOne({ username: toUsername }).session(session);
+        const toAccount = await Account.findOne({ username: toUsername });
         if (!toAccount) {
             await session.abortTransaction();
-            return res.json({ message: "Invalid reciver account" })
+            return res.json({ message: "Invalid receiver account" });
         }
-        await Account.findOneAndUpdate({ username: fromUsername }, { $inc: { balance: - amount } }).session(session)
-        await Account.findOneAndUpdate({ username: toUsername }, { $inc: { balance: + amount } }).session(session)
-        const newtransition = new Transaction({
+        await Account.findOneAndUpdate({ username: fromUsername }, { $inc: { balance: - amount } });
+        await Account.findOneAndUpdate({ username: toUsername }, { $inc: { balance: + amount } });
+        const newTransition = new Transaction({
             fromusername: fromUsername,
             tousername: toUsername,
             amount: amount,
-        })
-        const currentDate = new Date();
-        console.log(currentDate);
-
-        await newtransition.save({ session: session });
+            date: new Date() // Assuming you have a date field in your Transaction schema
+        });
+        await newTransition.save();
         await session.commitTransaction();
-        return res.json({ message: "transaction successful" });
+        session.endSession(); // End the session
+        return res.json({ message: "Transaction successful" });
+    } catch (error) {
+        return res.status(500).json({ message: "Invalid user", error: error.message });
     }
-    catch (error) {
-        res.json({ message: "invalid user", error: error });
-    }
-})
+});
+
+
 
 
 router.get('/getbalance', async (req, res) => {
