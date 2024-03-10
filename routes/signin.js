@@ -24,7 +24,9 @@ router.post('/' , async(req , res) => {
     }
 
     const token = jwt.sign({username }, JWT_SECRET);
-    res.json({ message: "Signin successful", token: `Bearer ${token}` });
+    const userInfoToSend = { ...userExist };
+     delete userInfoToSend.password;
+    res.json({ message: "Signin successful", UserInfo :userInfoToSend , token: `Bearer ${token}` });
    }
    catch{(error) => {
     console.error("Error in signin:", error);

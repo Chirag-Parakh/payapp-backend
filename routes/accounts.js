@@ -9,8 +9,8 @@ router.get('/', (req, res) => {
 
 router.post('/transfer', async (req, res) => {
     try {
-        // const session = await mongoose.startSession();
-        // session.startTransaction();
+        const session = await mongoose.startSession();
+        session.startTransaction();
         const authtoken = req.headers.authorization;
         const token = authtoken.split(' ')[1];
         const jwtVerification = jwt.verify(token, JWT_SECRET);
@@ -26,17 +26,17 @@ router.post('/transfer', async (req, res) => {
             await session.abortTransaction();
             return res.json({ message: "Invalid receiver account" });
         }
-        await Account.findOneAndUpdate({ username: fromUsername }, { $inc: { balance: - amount } });
-        await Account.findOneAndUpdate({ username: toUsername }, { $inc: { balance: + amount } });
+        await Account.findOneAndUpdate({ username: fromUsername }, { $inc: { balance: - amount } }).session(session);
+        await Account.findOneAndUpdate({ username: toUsername }, { $inc: { balance: + amount } }).session(session);
         const newTransition = new Transaction({
             fromusername: fromUsername,
             tousername: toUsername,
             amount: amount,
-            date: new Date() // Assuming you have a date field in your Transaction schema
+            date: new Date() 
         });
-        await newTransition.save();
-        // await session.commitTransaction();
-        // session.endSession(); // End the session
+        await newTransition.save().session(session);
+        await session.commitTransaction();
+        session.endSession(); 
         return res.json({ message: "Transaction successful" });
     } catch (error) {
         return res.status(500).json({ message: "Invalid user", error: error.message });

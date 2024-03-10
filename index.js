@@ -1,5 +1,6 @@
 const express = require("express")
 const app = express();
+const cors = require('cors'); 
 const signupRoute = require('./routes/signup.js')
 const signinRoute = require('./routes/signin.js')
 const updateRoute = require('./routes/update.js')
@@ -7,6 +8,7 @@ const usersRoute = require('./routes/users.js')
 const getbalanceRoute = require('./routes/accounts.js')
 const bodyParser = require('body-parser');
 app.use(bodyParser.json())
+app.use(cors());
 
 app.use('/signup' , signupRoute )
 app.use('/signin' , signinRoute )

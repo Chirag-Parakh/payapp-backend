@@ -42,7 +42,8 @@ router.post('/', async (req, res) => {
         await accountInfo.save();
 
         const token = jwt.sign({ username }, JWT_SECRET);
-        return res.json({ "message": "User created successfully", "token": `Bearer ${token}` });
+        const infotoSend = {username,  email, firstName, lastName};
+        return res.json({ "message": "User created successfully", "token": `Bearer ${token}` , UserInfo :infotoSend });
     } catch (error) {
         console.error("Error creating user:", error);
         return res.status(500).json({ "error": "Internal server error" });
