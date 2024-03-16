@@ -23,10 +23,10 @@ router.post('/' , async(req , res) => {
         res.status(401).json({"message" : "Incorrect password"});
     }
 
-    const token = jwt.sign({username }, JWT_SECRET);
-    const userInfoToSend = { ...userExist };
-     delete userInfoToSend.password;
-    res.json({ message: "Signin successful", UserInfo :userInfoToSend , token: `Bearer ${token}` });
+    const token = jwt.sign({ username }, JWT_SECRET);
+    const userInfoWithoutPassword = userExist.toJSON();
+    delete userInfoWithoutPassword.password;
+    res.json({ message: "Signin successful", UserInfo: userInfoWithoutPassword, token: `Bearer ${token}` });
    }
    catch{(error) => {
     console.error("Error in signin:", error);

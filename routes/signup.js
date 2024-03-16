@@ -21,11 +21,12 @@ router.post('/', async (req, res) => {
                 return res.status(400).json({ "message": "Email already exists" });
             }
         }
+        const newfirstName = firstName[0].toUpperCase() + firstName.slice(1)
         const newUser = new User({
-            username,
+            username ,
             password,
             email,
-            firstName,
+            firstName : newfirstName,
             lastName,
         });
         const validate = UserZodSchema.safeParse(newUser);
@@ -37,7 +38,7 @@ router.post('/', async (req, res) => {
 
         const accountInfo = new Account({
             username: username,
-            balance: 1 + Math.random() * 10000
+            balance: 1 + Math.floor(Math.random() * 10000)
         });
         await accountInfo.save();
 
