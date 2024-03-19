@@ -1,11 +1,11 @@
 const zod = require('zod');
 
 const UserZodSchema = zod.object({
-    username: zod.string()
-        .min(8, { message: "Username must be at least 8 characters long" })
-        .regex(/[a-z]/, { message: "username must contain a lowercase letter" })
-        .regex(/[A-Z]/, { message: "username must contain an uppercase letter" })
-        .regex(/^\S*$/, {  message: "Username cannot contain spaces"}),
+    username: zod.string(),
+        // .min(8, { message: "Username must be at least 8 characters long" })
+        // .regex(/[a-z]/, { message: "username must contain a lowercase letter" })
+        // .regex(/[A-Z]/, { message: "username must contain an uppercase letter" })
+        // .regex(/^\S*$/, {  message: "Username cannot contain spaces"}),
     password: zod.string()
         .min(8, { message: "Password must be at least 8 characters long" })
         .regex(/[a-z]/, { message: "Password must contain a lowercase letter" })
